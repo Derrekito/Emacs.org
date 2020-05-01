@@ -1,0 +1,557 @@
+#+TITLE: My Emacs Configuration File
+#+AUTHOR: Derrek Landauer
+#+EMAIL: 
+#+DATE: <2020-05-01 Fri>
+#+HEADER: :results silent
+#+STARTUP: inlineimages overview 
+
+* README
+  Don't forget to bytcompile after a git pull. This version has been scrubbed of
+PII and may not run correctly as-is. Use this for reference only.
+** Some Syntax reminders for this noob
+See this: https://www.gnu.org/software/emacs/manual/pdf/elisp.pdf
+
+*** Explicity empty list and nil, from p.2 :
+
+#+begin_example emacs-lisp :export no :results silent
+(cons 'foo ()) ; Emphasize the empty list
+(setq foo-flag nil) ; Emphasize the truth value false
+#+end_example
+
+*** definitions
+form - expressions that you can evaluate
+t - t, true
+nil - nil, false, empty list
+: - beginning of a keyword (i.e., constant) ; example 
+    :export nil
+Documenting tips
+
+#+BEGIN_QUOTE
+---------------     ----------------     -------------------
+| car  | cdr  |     | car    | cdr |     | car       | cdr |
+| rose |  o-------->| violet | o-------->| buttercup | nil |
+|      |      |     |        |     |     |           |     |
+---------------     ----------------     -------------------
+#+END_QUOTE
+
+The above is of the form
+
+(rose (violet (buttercup nil)))
+
+
+Empty list looks like
+
+
+#+BEGIN_QUOTE
+         --- ---      --- ---
+        |   |   |--> |   |   |--> nil
+         --- ---      --- ---
+          |            |
+          |            |
+           --> A        --> nil
+#+END_QUOTE
+
+-------------------------------------------------------------
+
+((pine needles) oak maple)
+
+#+BEGIN_QUOTE
+         --- ---      --- ---      --- ---
+        |   |   |--> |   |   |--> |   |   |--> nil
+         --- ---      --- ---      --- ---
+          |            |            |
+          |            |            |
+          |             --> oak      --> maple
+          |
+          |     --- ---      --- ---
+           --> |   |   |--> |   |   |--> nil
+                --- ---      --- ---
+                 |            |
+                 |            |
+                  --> pine     --> needles
+#+END_QUOTE
+
+
+     (setq alist-of-colors
+           '((rose . red) (lily . white) (buttercup . yellow)))
+
+description: variable alist-of-colors in the form of a list with three elements.
+             *rose* is a key and *red* is its value
+
+wtf is #(blahblah ... ??, It's text with properties...
+https://www.gnu.org/software/emacs/manual/html_mono/elisp.html#Text-Properties
+
+** Editing Types
+
+   Buffer Type: The basic object of editing.
+   Marker Type: A position in a buffer.
+   Window Type: Buffers are displayed in windows.
+   Frame Type: Windows subdivide frames.
+   Terminal Type: A terminal device displays frames.
+   Window Configuration Type: Recording the way a frame is subdivided.
+   Frame Configuration Type: Recording the status of all frames.
+   Process Type: A subprocess of Emacs running on the underlying OS.
+   Stream Type: Receive or send characters.
+   Keymap Type: What function a keystroke invokes.
+   Overlay Type: How an overlay is represented.
+   Font Type: Fonts for displaying text.
+* Set Variables
+** Package Archives
+
+#+begin_src emacs-lisp :results silent
+  (let ((default-directory "~/.emacs.d/")) (normal-top-level-add-subdirs-to-load-path))
+  (let ((default-directory "~/.emacs.d/elisp/")) (normal-top-level-add-subdirs-to-load-path))
+  (setq package-archives
+	'(("org-mode" . "/usr/share/emacs/lisp/org-mode/")
+	  ("melpa" . "https://melpa.org/packages/")
+	  ("marmalade" . "https://marmalade-repo.org/packages/")
+	  ("gnu" . "/usr/share/emacs/lisp/elpa/")))
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  (setq-default TeX-master nil)
+#+end_src
+
+** Inhibit Splash Screen
+
+#+begin_src emacs-lisp :results silent 
+(setq inhibit-splash-screen t)
+;; Enable transient mark mode
+(transient-mark-mode 1)
+#+end_src
+
+** Buffers
+
+#+begin_src emacs-lisp :results silent 
+  (global-auto-revert-mode t)
+#+end_src
+* Load Libraries and other things
+** Required Packages
+
+#+begin_src emacs-lisp :results silent :results silent
+  (require 'el-get)
+  (require 'org-bullets)
+  (require 'ob-matlab)
+  (require 'fill-column-indicator)
+  (require 'color-theme-sanityinc-tomorrow)
+  (require 'zencoding-mode)
+  (require 'auto-complete)
+  (require 'use-package)
+  (require 'auctex-latexmk) 
+  (require 'org-gcal)
+  (require 'ox-latex)
+#+end_src
+** Auctex stuff
+This package resulted in an invalid op code error
+#+begin_src emacs-lisp :results silent
+  (auctex-latexmk-setup)
+  (load "auctex.el" nil t t)
+  (load "preview-latex.el" nil t t)
+#+end_src
+* org-mode
+** Appearance
+
+#+begin_src elisp :results silent
+(setq org-pretty-entities t)  ; default is nil
+(setq org-columns-ellipses '("..")) ; currently the default.
+(setq org-startup-indented t) ; enable indent-mode
+; if above doesn't work or isn't a thing, try org-indent-mode to t
+(setq js-indent-level 2)
+#+end_src
+
+** Outline
+
+#+begin_src emacs-lisp :results silent 
+  (setq org-src-fontify-natively t)
+#+end_src
+
+UTF-symbols below
+
+
+                           
+
+       |     |     |     |     |     |     |     |     |
+       |------+------+------+------+------+------+------+------|
+       | f178 | f068 | f306 | f295 | f067 | f141 | f39b | f08b |
+       |      |      |      |      |      |      |      |      |
+       |      |      |      |      |      |      |      |      |
+
+Comment this to speed up initialization
+#+begin_src emacs-lisp :results silent :exports none
+;(print (quote ("\uf34e \uf00c \uf101 \uf0da")))
+;(print (quote ("\uf054 \uf105 \uf101 \uf0da ")))
+; (quote ("     "))
+;(print (font-family-list))
+#+end_src
+
+to print all available font-family to emacs
+;(print (font-family-list))
+"Font Awesome 5 Brands"
+"Font Awesome 5 Pro"
+"-Font Awesome 5 Pro-normal-normal-normal-*-95-*-*-*-*-0-iso10646-1"
+"-*-fontawesome-medium-r-normal--17-120-100-100-p-0-iso10646-1"
+
+/usr/share/fonts/OTF/Font Awesome 5 Pro-Solid-900.otf: Font Awesome 5 Pro,Font Awesome 5 Pro Solid:style=Solid,Book
+/usr/share/fonts/OTF/Font Awesome 5 Pro-Regular-400.otf: Font Awesome 5 Pro,Font Awesome 5 Pro Regular:style=Regular
+/usr/share/fonts/OTF/Font Awesome 5 Brands-Regular-400.otf: Font Awesome 5 Brands,Font Awesome 5 Brands Regular:style=Regular
+/usr/share/fonts/TTF/fa-regular-400.ttf: Font Awesome 5 Pro:style=Regular
+/usr/share/fonts/TTF/fa-solid-900.ttf: Font Awesome 5 Pro:style=Solid
+/usr/share/fonts/TTF/fa-brands-400.ttf: Font Awesome 5 Brands:style=Regular
+/usr/share/fonts/TTF/fa-light-300.ttf: Font Awesome 5 Pro:style=Light
+/usr/share/fonts/OTF/Font Awesome 5 Pro-Light-300.otf: Font Awesome 5 Pro,Font Awesome 5 Pro Light:style=Light
+
+https://zhangda.wordpress.com/2016/02/15/configurations-for-beautifying-emacs-org-mode/
+;; use org-bullets-mode for utf8 symbols as org bullets
+
+;; make available "org-bullet-face" such that I can control the font size individually
+
+#+BEGIN_EXAMPLE emacs-lisp :results silent
+  (custom-set-faces '(org-bullet-face ((t (:foreground "burlywood" :weight normal :height 1.5)))))
+  (setq org-bullets-face-name (quote org-bullet-face))
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+  (setq org-bullets-bullet-list '("✙" "♱" "♰" "☥" "✞" "✟" "†" "✠" "✚" "✜" "✛" "✢" "✣" "✤" "✥"))
+#+END_EXAMPLE
+
+#+begin_src emacs-lisp :results silent  :exports code
+  (defface org-bullets-face nil "face font for org-bullets" :group 'org-faces)
+  (set-face-font 'org-bullets-face "Font Awesome 5 Pro Regular")
+  (set-face-attribute 'org-bullets-face nil
+		      :family "Font Awesome 5 Pro Regular"
+		      :foundry "PfEd"
+		      :height 120
+		      :foreground "white")
+  (setq org-bullets-face-name (quote org-bullets-face))
+  (setq org-bullets-bullet-list '("" "" "" ""))
+  (setq org-ellipsis "")
+  (print "This is the bullets-sequence for org-mode:")
+  (print org-bullets-bullet-list)
+  :config
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+#+end_src
+
+
+#+begin_src emacs-lisp :results silent  :exports code
+  (setq org-todo-keywords
+	(quote ((sequence " TODO(t)" "|" " DONE(d)")
+		(sequence " WAITING(w)" "|" " CANCELED(c)")
+		(sequence "CLOCK-IN(i)" "|" "CLOCK-OUT(o)")
+		(sequence "IDEA" "|" "FAIL")
+		)))
+#+end_src
+** Babel
+
+#+begin_src emacs-lisp :results silent 
+  (setq org-babel-results-keyword "results") ;; Make babel response lowercase
+  (org-babel-do-load-languages
+   'org-babel-load-languages' 
+   ((emacs-lisp :results silent . t)
+    (dot . t)
+    (ditaa . t)
+    (R . t)
+    (python . t)
+    (ruby . t)
+    (gnuplot . t)
+    (clojure . t)
+    (js . t)
+    (shell . t)
+    (ledger . t)
+    (org . t)
+    (plantuml . t)
+    (latex . t)
+    (matlab . t)
+    (screen . t)
+    (calc .t)
+    (lisp . t)
+    (sed . sed)
+    (gnuplot . gnuplot)
+    (css . t)
+    (sass . t)
+    (ditaa .t)))
+#+end_src
+
+#+begin_src emacs-lisp :results silent 
+ (setq org-babel-default-header-args
+           (cons '(:exports . "code")
+                 (assq-delete-all :noweb org-babel-default-header-args)))
+#+end_src
+** Behavior
+
+I hate tabs!
+
+#+begin_src emacs-lisp :results silent 
+(setq indent-tabs-mode nil)
+(setq css-indent-offset 2)
+(setq c-basic-indent 2)
+;  (setq tab-width 2)
+#+end_src
+** Agenda
+*** Files
+#+begin_src emacs-lisp :results silent 
+  (add-hook 'after-init-hook 'org-agenda-list) ; show agenda at startup
+  (setq org-agenda-skip-scheduled-if-done t)
+   (setq org-agenda-files
+   	(list "~/org/work.org"
+   	      "~/org/projects.org" 
+   	      "~/org/home.org"
+   	      "~/org/calendar.org"
+   	      "~/org/birthdays.org"
+   	      "~/org/appointments.org"))
+  ;; http://cestlaz.github.io/posts/using-emacs-26-gcal/#.WnTExnWYVhE
+  (setq org-capture-templates
+	'(("a" "Appointments" entry (file  "~/org/kito.org" )
+	   "* %?\n\n%^T\n\n:PROPERTIES:\n\n:END:\n\n")
+	  ("b" "Ideas" entry (file+headline "~/org/ideas.org" "Blog Topics:")
+	   "* %?\n%T" :prepend t)
+	  ("t" "TODO Items" entry (file+headline "~/org/home.org" "To Do")
+	   "* TODO %?\n%u" :prepend t)
+	  ("n" "Notes" entry (file+headline "~/org/notes.org" "Note space")
+	   "* %?\n%u" :prepend t)
+	  ("j" "Journal" entry (file+datetree "~/org/journal.org")
+	   "* %?\nEntered on %U\n  %i\n  %a")))
+  (setq org-agenda-custom-commands
+	'(("c" "Simple agenda view" ((agenda "") (alltodo "")))))
+#+end_src
+*** calfw
+
+https://github.com/kiwanami/emacs-calfw
+
+NOTE:
+M-x cfw:gcal
+
+#+begin_src emacs-lisp :results silent :exports none
+  (require 'calfw)
+  (require 'calfw-cal)
+  (require 'calfw-ical)
+  (require 'calfw-org)
+  (setq google-ical-url "https://calendar.google.com/calendar/ical/")
+  (setq google-ics "basic.ics")
+  (defun my-open-calendar () (interactive)
+	 (cfw:open-calendar-buffer
+	  :contents-sources
+	  (list
+	   (cfw:org-create-source "Green")
+	   (cfw:cal-create-source "Orange")
+	    (concat google-ical-url schoolCalendar google-ics)
+	    "Yellow"))))
+  (setq cfw:org-overwrite-default-keybinding t)
+#+end_src
+** LaTeX
+*** LaTeX Booklet
+
+Make a booklet for my resume (two pages front and back).
+
+#+begin_src emacs-lisp :results silent
+  (defun Booklet (NumPag)
+    (interactive "sNumPag:")
+    (let ((bookletprev (buffer-file-name (current-buffer))))
+      (set-buffer (find-file "/Users/YourUser/Documents/Booklets.tex"))
+      (erase-buffer)
+      (insert
+	"\\documentclass[a4paper]{article} "
+	"\\usepackage[pdftex]{color,graphicx,epsfig} "
+	"\\usepackage[final]{pdfpages} "
+	"\\begin{document} "
+	(concat
+	 "\\includepdf[pages=-,nup=1x2,landscape,signature="
+	 (number-to-string (* (/ (+ 1 (string-to-number NumPag)) 4) 4))
+	 "]{"
+	 (substring bookletprev 0 (- (length bookletprev) 4))".pdf} ")
+	"\\end{document}"))
+    (tex-pdf-mode)
+    (save-buffer)
+   ;(tex-run-command "LaTeX")
+  )
+#+end_src
+*** LaTeX Export
+
+org-format-latex-header default value:
+(setq 'org-format-latex-header' "\\documentclass{article}\n\\usepackage[usenames]{color}\n[PACKAGES]\n[DEFAULT-PACKAGES]\n\\pagestyle{empty}             % do not remove\n% The settings below are copied from fullpage.sty\n\\setlength{\\textwidth}{\\paperwidth}\n\\addtolength{\\textwidth}{-3cm}\n\\setlength{\\oddsidemargin}{1.5cm}\n\\addtolength{\\oddsidemargin}{-2.54cm}\n\\setlength{\\evensidemargin}{\\oddsidemargin}\n\\setlength{\\textheight}{\\paperheight}\n\\addtolength{\\textheight}{-\\headheight}\n\\addtolength{\\textheight}{-\\headsep}\n\\addtolength{\\textheight}{-\\footskip}\n\\addtolength{\\textheight}{-3cm}\n\\setlength{\\topmargin}{1.5cm}\n\\addtolength{\\topmargin}{-2.54cm}")
+
+‘org-latex-default-packages-alist’ replaces [DEFAULT-PACKAGES]
+‘org-latex-packages-alist’ replaces [PACKAGES]
+
+
+The LaTeX packages included by default are as follows:
+
+| LaTeX package | Ubuntu container package  | Options | Comments                          |
+|---------------+---------------------------+---------+-----------------------------------|
+| inputenc      | texlive-latex-base        | utf8    |                                   |
+| fontenc       | texlive-latex-base        | T1      |                                   |
+| fixltx2e      | texlive-latex-base        |         | Various LaTeX fixes - fix-cm too? |
+| graphicx      | texlive-latex-base        |         |                                   |
+| longtable     | texlive-latex-base        |         |                                   |
+| float         | texlive-latex-recommended |         | floating environments             |
+| wrapfig       | texlive-latex-extra       |         | text wrapping around figures      |
+| soul          | texlive-latex-extra       |         | Underline/strike through          |
+| textcomp      | texlive-latex-base        |         | Misc text symbols                 |
+| marvosym      | texlive-fonts-recommended |         | Euro symbol                       |
+| wasysym       | texlive-fonts-recommended |         | Misc symbols                      |
+| latexsym      | texlive-latex-base        |         | Math symbols                      |
+| amssymb       | texlive-base              |         | Math symbols                      |
+| hyperref      | texlive-latex-base        |         |                                   |
+
+#+BEGIN_SRC emacs-lisp :results silent
+  (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+  (unless (boundp 'org-latex-classes)
+    (setq org-latex-classes nil))
+  (with-eval-after-load 'ox-latex
+    (add-to-list
+     'org-latex-classes
+     '("moderncv" 
+       "\\documentclass{moderncv} 
+	   [DEFAULT-PACKAGES] 
+	   [PACKAGES] 
+	   [EXTRA]"
+       ("\\section{%s}" . "\\section*{%s}")
+       ("\\subsection{%s}" . "\\subsection*{%s}")
+       ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+     '("myresume" 
+       "\\documentclass{res} 
+	   [DEFAULT-PACKAGES] 
+	   [PACKAGES] 
+	   [EXTRA]"
+       ("\\section{%s}" . "\\section*{%s}")
+       ("\\subsection{%s}" . "\\subsection*{%s}")
+       ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+     ))
+  (setq org-latex-listings t)
+  (add-to-list 'org-latex-packages-alist '("" "listings"))
+  (add-to-list 'org-latex-packages-alist '("" "fontspec"))
+  (setq org-preview-latex-image-directory '("~/ltximg/"))
+  ; http://nicholasvanhorn.com/posts/org-structure-completion.html
+  ;(add-to-list 'org-structure-template-alist 
+  ;'("r" "#+BEGIN_SRC R :exports both :results graphics :file 
+  ;./fig_1?.png\n\n#+END_SRC" "<src lang=\"?\">\n\n</src>"))
+
+  (eval-after-load 'org
+    '(progn
+       (add-to-list
+	'org-structure-template-alist
+	'("w" "#+begin_workaddress \n\n#+END_workaddress"
+	  "<src lang=\"latex\">\n?\n</src>"))))
+#+END_SRC
+* Fonts
+** Default Font
+
+#+begin_src emacs-lisp :results silent :exports code 
+  (set-face-attribute 'default nil :font "Hack:style=Regular" :height 180)
+  (defun org-mode-symbols ()
+    "Make org-mode bullets more pretty"
+    (setq prettify-symbols-alist
+	  '(("lambda" . 955) ; λ
+	    ("->" . 8594)    ; →
+	    ("=>" . 8658)    ; ⇒
+	    ("map" . 8614)   ; ↦
+	    )))
+  (add-hook 'org-mode 'org-mode-symbols)
+  (global-prettify-symbols-mode 1)
+#+end_src
+
+** Font Awesome Handling
+
+#+begin_src emacs-lisp :results silent :exports code 
+  (defface fontawesome-regular nil "fontawesome regular face font"
+    :group 'basic-faces)
+  (set-face-font 'fontawesome-regular "Font Awesome 5 Pro:style=Regular")
+  (set-face-attribute 'fontawesome-regular nil :height 120)
+
+  (defface fontawesome-light nil "fontawesome light face font"
+    :group 'basic-faces)
+  (set-face-font 'fontawesome-light "Font Awesome 5 Pro:style=Light")
+  (set-face-attribute 'fontawesome-light nil :height 120)
+
+  (defface fontawesome-solid nil "fontawesome solid face font"
+    :group 'basic-faces)
+  (set-face-font 'fontawesome-solid "Font Awesome 5 Pro:style=Solid")
+  (set-face-attribute 'fontawesome-solid nil :height 120)
+#+end_src
+
+** Testing the Font
+
+To clear font-cache (GNU/Linux) run the following
+$ fc-cache -f -v
+* Cursor
+
+#+begin_src emacs-lisp :results silent :exports code 
+  (setq-default cursor-type '(hbar . 1))
+  '(blink-cursor-mode nil)
+  '(set-cursor-color "#FF0000")
+  '(background-mode dark)
+#+end_src
+* Key Bindings
+
+#+begin_src emacs-lisp :results silent 
+  (setq select-enable-clipboard t)
+  (cua-mode t)
+#+end_src
+ 
+* Interface
+** Bars, line numbers, cursor no blink, highlight parenthesis matching
+
+#+begin_src emacs-lisp :results silent 
+  (scroll-bar-mode -1)
+  (menu-bar-mode -1)
+  (tool-bar-mode -1)
+  (setq show-paren-delay 0) ; must be before show-paren-mode
+  (show-paren-mode 1)
+  (global-linum-mode 1)
+  (setq-default left-fringe 1)
+  (setq-default right-fringe 0)
+  (window-divider-mode 1)
+#+end_src
+
+*** Fill Column Indicator
+https://www.emacswiki.org/emacs/FillColumnIndicator#toc1
+(fci-mode 1)(add-hook 'after-change-major-mode-hook 'fci-mode)
+
+#+begin_src emacs-lisp :results silent 
+  (setq fci-rule-use-dashes 1)
+  (setq fci-rule-width 1) ; in pixels
+  (setq fci-rule-color "grey")
+  (setq fci-rule-column 80)
+  (setq column-number-mode 1)
+  (define-globalized-minor-mode global-fci-mode fci-mode
+    (lambda () (fci-mode 1)))
+  (global-fci-mode 1)
+#+end_src
+** Tabs
+
+#+begin_src emacs-lisp :results silent 
+  (setq css-indent-offset 2)
+#+end_src
+
+*** Full Screen
+
+#+begin_src emacs-lisp :results silent 
+  (defun fullscreen ()
+    (interactive)
+    (set-frame-parameter
+     nil 'fullscreen
+     (if (frame-parameter nil 'fullscreen) nil 'fullboth)))
+  (setq fullscreen t)
+#+end_src
+** Themes
+
++ list custom-enabled-themes before custom-safe-themes
++ the order in which themes are invoked matters
+
+Emacs throws this into init.el automatically.
+#+begin_src emacs-lisp :results silent 
+  (custom-set-variables
+   '(custom-enabled-themes (quote (atom-dark sanityinc-tomorrow-night)))
+   '(custom-safe-themes
+     '("4555c851795f0e0fd572ba82208373b0c32aaffa78289e983d4b25cd1557f472" 
+       "628278136f88aa1a151bb2d6c8a86bf2b7631fbea5f0f76cba2a0079cd910f7d"
+       "06f0b439b62164c6f8f84fdda32b62fb50b6d00e8b01c2208e55543a6337433a"
+       default)))
+#+end_src
+* IRC
+#+begin_src emacs-lisp :results silent :exports code 
+  (setq circe-network-options
+	'(("Freenode"
+	   :tls t
+	   :nick ""
+	   :sasl-username ""
+	   :sasl-password 
+	   :channels ("##slackware")
+	   )))
+#+end_src
