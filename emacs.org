@@ -6,6 +6,7 @@
 #+STARTUP: inlineimages overview 
 
 * README
+  GitHub doesn't have perfect support for org files, so some of the formatting may render incorrectly.
   Don't forget to bytcompile after a git pull. 
   This version has been scrubbed of PII and may not run correctly as-is. 
   Use this for reference only.
@@ -92,17 +93,14 @@ This package resulted in an invalid op code error
   (setq org-src-fontify-natively t)
 #+end_src
 
-UTF-symbols below
+UTF-symbols below. Requires Font Awesome Pro for proper rendering.
 
 
                            
-
        |     |     |     |     |     |     |     |     |
        |------+------+------+------+------+------+------+------|
        | f178 | f068 | f306 | f295 | f067 | f141 | f39b | f08b |
-       |      |      |      |      |      |      |      |      |
-       |      |      |      |      |      |      |      |      |
-
+ 
 Comment this to speed up initialization
 #+begin_src emacs-lisp :results silent :exports none
 ;(print (quote ("\uf34e \uf00c \uf101 \uf0da")))
@@ -128,10 +126,9 @@ to print all available font-family to emacs
 /usr/share/fonts/OTF/Font Awesome 5 Pro-Light-300.otf: Font Awesome 5 Pro,Font Awesome 5 Pro Light:style=Light
 
 https://zhangda.wordpress.com/2016/02/15/configurations-for-beautifying-emacs-org-mode/
-;; use org-bullets-mode for utf8 symbols as org bullets
 
-;; make available "org-bullet-face" such that I can control the font size individually
 
+Example code for setting fonts with org-mode bullets
 #+BEGIN_EXAMPLE emacs-lisp :results silent
   (custom-set-faces '(org-bullet-face ((t (:foreground "burlywood" :weight normal :height 1.5)))))
   (setq org-bullets-face-name (quote org-bullet-face))
@@ -156,7 +153,7 @@ https://zhangda.wordpress.com/2016/02/15/configurations-for-beautifying-emacs-or
   (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
 #+end_src
 
-
+Setting TODO sequences
 #+begin_src emacs-lisp :results silent  :exports code
   (setq org-todo-keywords
 	(quote ((sequence " TODO(t)" "|" " DONE(d)")
@@ -203,7 +200,7 @@ https://zhangda.wordpress.com/2016/02/15/configurations-for-beautifying-emacs-or
 #+end_src
 ** Behavior
 
-I hate tabs!
+Replace tabs with spaces.
 
 #+begin_src emacs-lisp :results silent 
 (setq indent-tabs-mode nil)
