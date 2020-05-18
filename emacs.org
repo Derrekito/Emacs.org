@@ -6,83 +6,11 @@
 #+STARTUP: inlineimages overview 
 
 * README
-  Don't forget to bytcompile after a git pull. This version has been scrubbed of
-PII and may not run correctly as-is. Use this for reference only.
-** Some Syntax reminders for this noob
-See this: https://www.gnu.org/software/emacs/manual/pdf/elisp.pdf
-
-*** Explicity empty list and nil, from p.2 :
-
-#+begin_example emacs-lisp :export no :results silent
-(cons 'foo ()) ; Emphasize the empty list
-(setq foo-flag nil) ; Emphasize the truth value false
-#+end_example
-
-*** definitions
-form - expressions that you can evaluate
-t - t, true
-nil - nil, false, empty list
-: - beginning of a keyword (i.e., constant) ; example 
-    :export nil
-Documenting tips
-
-#+BEGIN_QUOTE
----------------     ----------------     -------------------
-| car  | cdr  |     | car    | cdr |     | car       | cdr |
-| rose |  o-------->| violet | o-------->| buttercup | nil |
-|      |      |     |        |     |     |           |     |
----------------     ----------------     -------------------
-#+END_QUOTE
-
-The above is of the form
-
-(rose (violet (buttercup nil)))
-
-
-Empty list looks like
-
-
-#+BEGIN_QUOTE
-         --- ---      --- ---
-        |   |   |--> |   |   |--> nil
-         --- ---      --- ---
-          |            |
-          |            |
-           --> A        --> nil
-#+END_QUOTE
-
--------------------------------------------------------------
-
-((pine needles) oak maple)
-
-#+BEGIN_QUOTE
-         --- ---      --- ---      --- ---
-        |   |   |--> |   |   |--> |   |   |--> nil
-         --- ---      --- ---      --- ---
-          |            |            |
-          |            |            |
-          |             --> oak      --> maple
-          |
-          |     --- ---      --- ---
-           --> |   |   |--> |   |   |--> nil
-                --- ---      --- ---
-                 |            |
-                 |            |
-                  --> pine     --> needles
-#+END_QUOTE
-
-
-     (setq alist-of-colors
-           '((rose . red) (lily . white) (buttercup . yellow)))
-
-description: variable alist-of-colors in the form of a list with three elements.
-             *rose* is a key and *red* is its value
-
-wtf is #(blahblah ... ??, It's text with properties...
-https://www.gnu.org/software/emacs/manual/html_mono/elisp.html#Text-Properties
+  Don't forget to bytcompile after a git pull. 
+  This version has been scrubbed of PII and may not run correctly as-is. 
+  Use this for reference only.
 
 ** Editing Types
-
    Buffer Type: The basic object of editing.
    Marker Type: A position in a buffer.
    Window Type: Buffers are displayed in windows.
